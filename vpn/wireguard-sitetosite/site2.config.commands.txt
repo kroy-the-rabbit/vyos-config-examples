@@ -1,0 +1,66 @@
+vyos@vyos02:~$ generate wireguard named-keypairs site1
+vyos@vyos02:~$ show wireguard keypairs pubkey site1
+CLN0A47cOZxmiibKvj+f9uYcOWP2vPJn/xg5ujsFbmA=
+
+vyos@vyos02:~$ conf
+[edit]
+vyos@vyos02# set interfaces ethernet eth1 address 192.168.34.1/24
+[edit]
+vyos@vyos02# commit
+[edit]
+vyos@vyos02# save
+Saving configuration to '/config/config.boot'...
+Done
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 port 2224
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 address 10.32.47.3/31
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 peer SITE1 address 10.21.21.71
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 peer SITE1 port 2224
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 private-key site1
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 description "Site to Site to SITE1"
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 peer SITE1 pubkey 321igxlao+uB+PhZ92BETLKGoGpc1rYQfF/wiqaYGR8=
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 peer SITE1 persistent-keepalive 15
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 peer SITE1 allowed-ips 10.32.47.2/31
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 peer SITE1 allowed-ips 192.168.34.0/24
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 peer SITE1 allowed-ips 172.16.22.0/24
+[edit]
+vyos@vyos02# commit
+save
+[edit]
+vyos@vyos02# save
+Saving configuration to '/config/config.boot'...
+Done
+[edit]
+
+
+vyos@vyos02:~$ show interfaces
+Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down
+Interface        IP Address                        S/L  Description
+---------        ----------                        ---  -----------
+eth0             10.21.21.70/24                    u/u
+eth1             192.168.34.1/24                   u/u
+lo               127.0.0.1/8                       u/u
+                 ::1/128
+wg0              10.32.47.3/31                     u/u  Site to Site to SITE1
+
+
+vyos@vyos02:~$ ping 10.32.47.2 count 4
+PING 10.32.47.2 (10.32.47.2) 56(84) bytes of data.
+64 bytes from 10.32.47.2: icmp_seq=1 ttl=64 time=0.504 ms
+64 bytes from 10.32.47.2: icmp_seq=2 ttl=64 time=0.600 ms
+64 bytes from 10.32.47.2: icmp_seq=3 ttl=64 time=0.448 ms
+64 bytes from 10.32.47.2: icmp_seq=4 ttl=64 time=0.715 ms
+
+--- 10.32.47.2 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 80ms
+rtt min/avg/max/mdev = 0.448/0.566/0.715/0.105 ms

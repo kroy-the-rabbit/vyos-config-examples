@@ -1,1 +1,1 @@
-# Configure examples for VyOS
+# Configuration examples for VyOS

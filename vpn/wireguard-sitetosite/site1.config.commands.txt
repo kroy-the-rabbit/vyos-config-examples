@@ -1,0 +1,113 @@
+vyos@vyos01:~$ generate wireguard named-keypairs site2
+vyos@vyos01:~$ show wireguard keypairs pubkey site2
+321igxlao+uB+PhZ92BETLKGoGpc1rYQfF/wiqaYGR8=
+
+vyos@vyos01:~$ conf
+[edit]
+vyos@vyos01# set interfaces ethernet eth1 address 172.16.22.1/24
+[edit]
+vyos@vyos01# commit
+[edit]
+vyos@vyos01# save
+Saving configuration to '/config/config.boot'...
+Done
+[edit]
+vyos@vyos01# set interfaces wireguard wg0 port 2224
+[edit]
+vyos@vyos01# set interfaces wireguard wg0 address 10.32.47.2/31
+[edit]
+vyos@vyos01# set interfaces wireguard wg0 peer SITE2 address 10.21.21.70
+[edit]
+vyos@vyos01# set interfaces wireguard wg0 peer SITE2 port 2224
+[edit]
+vyos@vyos01# set interfaces wireguard wg0 private-key site1
+[edit]
+vyos@vyos01# set interfaces wireguard wg0 description "Site to Site to Site1"
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 peer SITE2 pubkey CLN0A47cOZxmiibKvj+f9uYcOWP2vPJn/xg5ujsFbmA=
+[edit]
+vyos@vyos02# set interfaces wireguard wg0 peer SITE2 persistent-keepalive 15
+[edit]
+vyos@vyos01# set interfaces wireguard wg0 peer SITE2 allowed-ips 10.32.47.2/31
+[edit]
+vyos@vyos01# set interfaces wireguard wg0 peer SITE2 allowed-ips 192.168.34.0/24
+[edit]
+vyos@vyos01# set interfaces wireguard wg0 peer SITE2 allowed-ips 172.16.22.0/24
+[edit]
+vyos@vyos01# commit
+save
+[edit]
+vyos@vyos01# save
+Saving configuration to '/config/config.boot'...
+Done
+[edit]
+
+
+vyos@vyos01:~$ show interfaces
+Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down
+Interface        IP Address                        S/L  Description
+---------        ----------                        ---  -----------
+eth0             10.21.21.71/24                    u/u
+eth1             172.16.22.1/24                    u/u
+lo               127.0.0.1/8                       u/u
+                 ::1/128
+wg0              10.32.47.2/31                     u/u  Site to Site to Site2
+
+vyos@vyos01:~$ ping 10.32.47.3 count 4
+PING 10.32.47.3 (10.32.47.3) 56(84) bytes of data.
+64 bytes from 10.32.47.3: icmp_seq=1 ttl=64 time=0.593 ms
+64 bytes from 10.32.47.3: icmp_seq=2 ttl=64 time=0.557 ms
+64 bytes from 10.32.47.3: icmp_seq=3 ttl=64 time=0.672 ms
+64 bytes from 10.32.47.3: icmp_seq=4 ttl=64 time=0.778 ms
+
+--- 10.32.47.3 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 67ms
+rtt min/avg/max/mdev = 0.557/0.650/0.778/0.084 ms
+vyos@vyos01:~$
+
+
+
+vyos@vyos02# set protocols static route 172.16.22.0/24 next-hop 10.32.47.2
+[edit]
+vyos@vyos02# commit
+save
+[edit]
+vyos@vyos02# save
+
+
+
+vyos@vyos01:~$ show interfaces
+Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down
+Interface        IP Address                        S/L  Description
+---------        ----------                        ---  -----------
+eth0             10.21.21.71/24                    u/u
+eth1             172.16.22.1/24                    u/u
+lo               127.0.0.1/8                       u/u
+                 ::1/128
+wg0              10.32.47.2/31                     u/u  Site to Site to Site2
+vyos@vyos01:~$ show ip route
+Codes: K - kernel route, C - connected, S - static, R - RIP,
+       O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
+       T - Table, v - VNC, V - VNC-Direct, A - Babel, D - SHARP,
+       F - PBR, f - OpenFabric,
+       > - selected route, * - FIB route, q - queued route, r - rejected route
+
+S>* 0.0.0.0/0 [210/0] via 10.21.21.1, eth0, 00:47:03
+C>* 10.21.21.0/24 is directly connected, eth0, 00:47:04
+C>* 10.32.47.2/31 is directly connected, wg0, 00:33:44
+C>* 172.16.22.0/24 is directly connected, eth1, 00:16:39
+S>* 192.168.34.0/24 [1/0] via 10.32.47.3, wg0, 00:14:00
+vyos@vyos01:~$ ping 192.168.34.2  count 3
+PING 192.168.34.2 (192.168.34.2) 56(84) bytes of data.
+64 bytes from 192.168.34.2: icmp_seq=1 ttl=63 time=0.734 ms
+64 bytes from 192.168.34.2: icmp_seq=2 ttl=63 time=0.876 ms
+64 bytes from 192.168.34.2: icmp_seq=3 ttl=63 time=0.729 ms
+
+--- 192.168.34.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 4ms
+rtt min/avg/max/mdev = 0.729/0.779/0.876/0.075 ms
+vyos@vyos01:~$ traceroute 192.168.34.2
+traceroute to 192.168.34.2 (192.168.34.2), 30 hops max, 60 byte packets
+ 1  10.32.47.3 (10.32.47.3)  1.023 ms  0.990 ms  0.888 ms
+ 2  192.168.34.2 (192.168.34.2)  0.876 ms  0.818 ms  0.828 ms
+vyos@vyos01:~$s
