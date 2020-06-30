@@ -1,11 +1,9 @@
 interfaces {
     ethernet eth0 {
         address dhcp
-        hw-id 00:50:56:ae:6c:b4
     }
     ethernet eth1 {
         address 172.16.22.1/24
-        hw-id 00:50:56:ae:6b:16
     }
     loopback lo {
     }
