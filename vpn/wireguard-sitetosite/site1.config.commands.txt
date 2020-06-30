@@ -24,9 +24,9 @@ vyos@vyos01# set interfaces wireguard wg0 private-key site1
 [edit]
 vyos@vyos01# set interfaces wireguard wg0 description "Site to Site to Site1"
 [edit]
-vyos@vyos02# set interfaces wireguard wg0 peer SITE2 pubkey CLN0A47cOZxmiibKvj+f9uYcOWP2vPJn/xg5ujsFbmA=
+vyos@vyos01# set interfaces wireguard wg0 peer SITE2 pubkey CLN0A47cOZxmiibKvj+f9uYcOWP2vPJn/xg5ujsFbmA=
 [edit]
-vyos@vyos02# set interfaces wireguard wg0 peer SITE2 persistent-keepalive 15
+vyos@vyos01# set interfaces wireguard wg0 peer SITE2 persistent-keepalive 15
 [edit]
 vyos@vyos01# set interfaces wireguard wg0 peer SITE2 allowed-ips 10.32.47.2/31
 [edit]
