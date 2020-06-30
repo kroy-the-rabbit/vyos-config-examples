@@ -42,6 +42,14 @@ Saving configuration to '/config/config.boot'...
 Done
 [edit]
 
+vyos@vyos02# set protocols static route 172.16.22.0/24 next-hop 10.32.47.2
+[edit]
+vyos@vyos02# commit
+save
+[edit]
+vyos@vyos02# save
+
+
 
 vyos@vyos02:~$ show interfaces
 Codes: S - State, L - Link, u - Up, D - Down, A - Admin Down
