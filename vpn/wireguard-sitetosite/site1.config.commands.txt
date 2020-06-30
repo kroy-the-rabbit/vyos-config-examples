@@ -67,7 +67,7 @@ vyos@vyos01:~$
 
 
 
-vyos@vyos02# set protocols static route 172.16.22.0/24 next-hop 10.32.47.2
+vyos@vyos02# set protocols static route 192.168.34.0/24 next-hop 10.32.47.3
 [edit]
 vyos@vyos02# commit
 save
