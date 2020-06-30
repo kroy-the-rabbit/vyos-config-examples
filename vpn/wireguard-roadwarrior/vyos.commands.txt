@@ -1,0 +1,33 @@
+oset interfaces ethernet eth0 address '10.22.22.9/24'
+set interfaces ethernet eth0 hw-id '00:50:56:ae:bd:00'
+set interfaces ethernet eth1 address '10.37.42.1/24'
+set interfaces ethernet eth1 hw-id '00:50:56:ae:b2:05'
+set interfaces loopback lo
+set interfaces wireguard wg0 address '172.19.21.1/24'
+set interfaces wireguard wg0 description 'Accounting VPN'
+set interfaces wireguard wg0 peer UserADesktop allowed-ips '172.19.21.2/32'
+set interfaces wireguard wg0 peer UserADesktop persistent-keepalive '15'
+set interfaces wireguard wg0 peer UserADesktop pubkey 'Lam/k//j43MA/L6D/1vz6cElgmXHFAldLy9LW0zWtDQ='
+set interfaces wireguard wg0 port '2224'
+set interfaces wireguard wg0 private-key 'roadwarriors-accounting'
+set nat source rule 10 description 'NAT Outbound'
+set nat source rule 10 outbound-interface 'eth0'
+set nat source rule 10 source address '10.37.42.0/24'
+set nat source rule 10 translation address 'masquerade'
+set nat source rule 20 description 'NAT Outbound'
+set nat source rule 20 outbound-interface 'eth0'
+set nat source rule 20 source address '172.19.21.0/24'
+set nat source rule 20 translation address 'masquerade'
+set protocols static route 0.0.0.0/0 next-hop 10.22.22.1
+set service ssh port '22'
+set system config-management commit-revisions '100'
+set system console device ttyS0 speed '115200'
+set system host-name 'vyos'
+set system login user vyos authentication encrypted-password '$6$VeA.8Fniur$nQIYlhOOUcqtS38CMBKC2XReLDtvwuMgWc4GoF7Bcqz6bE1yy/nvkVtVXK8eXcN0GvOmalBcmVo/USwrfP5P61'
+set system login user vyos authentication plaintext-password ''
+set system name-server '8.8.8.8'
+set system ntp server 0.pool.ntp.org
+set system ntp server 1.pool.ntp.org
+set system ntp server 2.pool.ntp.org
+set system syslog global facility all level 'info'
+set system syslog global facility protocols level 'debug'
