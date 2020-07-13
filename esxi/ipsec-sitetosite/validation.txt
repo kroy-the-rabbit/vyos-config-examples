@@ -1,0 +1,35 @@
+
+Showing tunnel information:
+
+
+vyos@vyos01:~$ show vpn ike sa
+Peer ID / IP                            Local ID / IP
+------------                            -------------
+10.0.54.202                             10.0.54.201
+
+    State  IKEVer  Encrypt  Hash    D-H Group      NAT-T  A-Time  L-Time
+    -----  ------  -------  ----    ---------      -----  ------  ------
+    up     IKEv1   aes256   sha1_96 2(MODP_1024)   no     720     3600
+
+
+vyos@vyos01:~$ show vpn ipsec sa
+Connection                 State    Up          Bytes In/Out    Remote address    Remote ID    Proposal
+-------------------------  -------  ----------  --------------  ----------------  -----------  ------------------------------------------------
+peer-10.0.54.202-tunnel-0  up       94 seconds  252B/252B       10.0.54.202       N/A          AES_CBC_256/HMAC_SHA1_96/PRF_HMAC_SHA1/MODP_1024
+
+
+
+
+Pinging through the tunnel:
+
+
+vyos@vyos01:~$ ping 192.168.200.1 count 4
+PING 192.168.200.1 (192.168.200.1) 56(84) bytes of data.
+64 bytes from 192.168.200.1: icmp_seq=1 ttl=64 time=1.19 ms
+64 bytes from 192.168.200.1: icmp_seq=2 ttl=64 time=0.327 ms
+64 bytes from 192.168.200.1: icmp_seq=3 ttl=64 time=0.390 ms
+64 bytes from 192.168.200.1: icmp_seq=4 ttl=64 time=0.400 ms
+
+--- 192.168.200.1 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3050ms
+rtt min/avg/max/mdev = 0.327/0.577/1.192/0.356 ms
